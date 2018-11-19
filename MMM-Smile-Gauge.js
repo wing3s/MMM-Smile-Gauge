@@ -2,7 +2,7 @@ var currTs = function () {
     return Math.floor(Date.now() / 1000);
 };
 
-Module.register("smilegauge", {
+Module.register("MMM-Smile-Gauge", {
     defaults: {
         sliderWidth: "450",  //px
         gaugeSensitivity: 0.5, // 0.1~1.0 Higher sensitivity moves gauge faster
@@ -18,7 +18,7 @@ Module.register("smilegauge", {
         preview: ''
     },
     getStyles: function() {
-        return [this.file("./css/smilegauge.css")];
+        return [this.file("./css/MMM-Smile-Gauge.css")];
     },
     socketNotificationReceived: function(notification, payload) {
         var self = this;
@@ -57,8 +57,8 @@ Module.register("smilegauge", {
         sliderbar.setAttribute("max", "100");
         sliderbar.setAttribute("style", "width:"+this.config.sliderWidth+"px");
         sliderbar.name = "sliderbar";
-        gaugeLeft.src = 'smilegauge/smile_left.jpg';
-        gaugeRight.src = 'smilegauge/smile_right.jpg';
+        gaugeLeft.src = 'MMM-Smile-Gauge/smile_left.jpg';
+        gaugeRight.src = 'MMM-Smile-Gauge/smile_right.jpg';
         gaugeLeft.classList.add("circleImg");
         gaugeRight.classList.add("circleImg");
         preview.setAttribute("height", "300px");
