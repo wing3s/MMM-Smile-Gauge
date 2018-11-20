@@ -10,11 +10,21 @@
 ### Smile Gauge Module
 ```bash
 # Go to MagicMirror main directory
-cd modules
+cd MagicMirror/modules
 git clone https://github.com/wing3s/MMM-Smile-Gauge.git
 cd MMM-Smile-Gauge
 bash detector/setup.sh  # Download Haar cascade data
 ```
+### Configuration
+Add following in `MagicMirror/config/config.js` to register the module.
+```javascript
+// Example
+{
+    module: "MMM-Smile-Gauge",
+    position: "lower_third"
+},
+```
+
 
 ### Python Packages
 #### openCV
@@ -39,18 +49,17 @@ Will prompt window to ask permission of camera.
 ## Test
 ```bash
 # Check if python, opencv, webcam are installed properly
-cd detector
+cd MMM-Smile-Gauge/detector
 python detector.py
 ```
 
 ## Customization
 ### Face/smile detector parameters
-  Fine tune parameters in `detector/detector.py`.
+  Fine tune parameters in `MMM-Smile-Gauge/detector/detector.py`.
 ### Replace gauge images
-  Simply change square images in `public` folder.
+  Simply change square images in `MMM-Smile-Gauge/public` folder.
 
 
 ## Reference
-- [Real-time smile detection]
-(http://pushbuttons.io/blog/2015/4/27/smile-detection-in-python-opencv)
+- [Real-time smile detection](http://pushbuttons.io/blog/2015/4/27/smile-detection-in-python-opencv)
 - [Improve Python openCV FPS of webcam](https://www.pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/)
