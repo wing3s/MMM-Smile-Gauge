@@ -1,6 +1,8 @@
 from os import path
 import base64
 import cv2
+from imutils.video import WebcamVideoStream
+import imutils
 
 
 FACE_PATH = path.join(
@@ -12,12 +14,11 @@ SMILE_PATH = path.join(
 
 class Detector(object):
     def __init__(self):
-        self.camera = cv2.VideoCapture(0)
+        self.camera = WebcamVideoStream(src=0).start()
         self.face_cascade = cv2.CascadeClassifier(FACE_PATH)
         self.smile_cascade = cv2.CascadeClassifier(SMILE_PATH)
         # Configurable arguments
-        self.camera.set(3, 640)  # camera width
-        self.camera.set(4, 480)  # camera height
+        self.camera_width = 500
         self.face_rect = {'color': (255, 255, 0), 'thickness': 3}
         self.smile_rect = {'color': (0, 255, 0), 'thickness': 2}
         self.face_opts = {'scaleFactor': 1.05, 'minNeighbors': 12}
@@ -25,14 +26,15 @@ class Detector(object):
         self.output_img_size = {'width': 400, 'height': 300}
 
     def __del__(self):
-        self.camera.release()
+        self.camera.stop()
 
     def process_frame(self, output_fmt=None):
         assert output_fmt in ['raw', 'jpeg', 'png']
         face_num = 0
         smile_num = 0
 
-        success, frame = self.camera.read()
+        frame = self.camera.read()
+        frame = imutils.resize(frame, width=self.camera_width)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         faces = self.face_cascade.detectMultiScale(
