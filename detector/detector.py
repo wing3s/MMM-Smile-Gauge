@@ -17,6 +17,7 @@ class Detector(object):
         self.camera = WebcamVideoStream(src=0).start()
         self.face_cascade = cv2.CascadeClassifier(FACE_PATH)
         self.smile_cascade = cv2.CascadeClassifier(SMILE_PATH)
+
         # Configurable arguments
         self.camera_width = 500
         self.face_rect = {'color': (255, 255, 0), 'thickness': 3}
@@ -24,6 +25,7 @@ class Detector(object):
         self.face_opts = {'scaleFactor': 1.05, 'minNeighbors': 12}
         self.smile_opts = {'scaleFactor': 1.6, 'minNeighbors': 22}
         self.output_img_size = {'width': 400, 'height': 300}
+        self.brightness_threshold = 20  # stop face detection if brightness below this value
 
     def __del__(self):
         self.camera.stop()
@@ -36,6 +38,10 @@ class Detector(object):
         frame = self.camera.read()
         frame = imutils.resize(frame, width=self.camera_width)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        brightness = gray.mean()
+
+        if brightness < self.brightness_threshold:
+            return (frame, face_num, smile_num)
 
         faces = self.face_cascade.detectMultiScale(
             gray,
