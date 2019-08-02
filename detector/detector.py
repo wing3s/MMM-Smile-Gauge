@@ -41,7 +41,7 @@ class Detector(object):
         brightness = gray.mean()
 
         if brightness < self.brightness_threshold:
-            return (frame, face_num, smile_num)
+            return (self.encode_frame(frame, output_fmt), face_num, smile_num)
 
         faces = self.face_cascade.detectMultiScale(
             gray,
@@ -70,10 +70,13 @@ class Detector(object):
             frame,
             (self.output_img_size['width'], self.output_img_size['height']))
 
+        return (self.encode_frame(output_frame, output_fmt), face_num, smile_num)
+
+    def encode_frame(self, frame, output_fmt):
         if output_fmt != 'raw':
-            cnt = cv2.imencode('.' + output_fmt, output_frame)[1]
-            output_frame = base64.encodestring(cnt).decode('ascii')
-        return (output_frame, face_num, smile_num)
+            cnt = cv2.imencode('.' + output_fmt, frame)[1]
+            frame = base64.encodestring(cnt).decode('ascii')
+        return frame
 
 
 if __name__ == "__main__":
