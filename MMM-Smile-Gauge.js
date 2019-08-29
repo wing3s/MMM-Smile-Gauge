@@ -5,9 +5,9 @@ var currTs = function () {
 Module.register("MMM-Smile-Gauge", {
     defaults: {
         sliderWidth: "450",  //px
-        gaugeSensitivity: 0.5, // 0.1~1.0 Higher sensitivity moves gauge faster
-        resetThreshold: 3, // Number of sec not seeing faces to reset gauge
-        pauseThreshold: 2, // Number of sec not receiving detector signals to pause preview, set 0 to keep preview always on
+        gaugeSensitivity: 0.8, // 0.1~1.0 Higher sensitivity moves gauge faster
+        resetThreshold: 4, // Number of sec not seeing faces to reset gauge
+        pauseThreshold: 3, // Number of sec not receiving detector signals to pause preview, set 0 to keep preview always on
         gaugeLeftText: "ChuChu's poker face", // show text when gauge reaches 0
         gaugeRightText: "Jaeger's big smile", // show text when gauge reaches 100
     },
