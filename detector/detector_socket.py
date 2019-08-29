@@ -5,7 +5,7 @@ from detector import Detector
 
 SOCKET_PATH = "/tmp/node-python-socket"
 MSG_SEPARATOR = "\r"
-FRAME_WAIT = 60  # ms
+FRAME_WAIT = 90  # ms
 
 if __name__ == "__main__":
     client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
