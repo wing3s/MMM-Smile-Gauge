@@ -17,6 +17,7 @@ class Detector(object):
         self.camera = WebcamVideoStream(src=0).start()
         self.face_cascade = cv2.CascadeClassifier(FACE_PATH)
         self.smile_cascade = cv2.CascadeClassifier(SMILE_PATH)
+        self.cache = {'faces': None, 'smiles': None, 'hit_count': 0}
 
         # Configurable arguments
         self.camera_width = 500
@@ -26,6 +27,7 @@ class Detector(object):
         self.smile_opts = {'scaleFactor': 1.6, 'minNeighbors': 22}
         self.output_img_size = {'width': 400, 'height': 300}
         self.brightness_threshold = 30  # stop face detection if brightness below this value
+        self.cache_ttl = 2  # keep cache in number of frames
 
     def __del__(self):
         self.camera.stop()
@@ -38,16 +40,14 @@ class Detector(object):
         frame = self.camera.read()
         frame = imutils.resize(frame, width=self.camera_width)
         frame = cv2.flip(frame, 1)
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         brightness = gray.mean()
 
         if brightness < self.brightness_threshold:
             return (self.encode_frame(frame, output_fmt), face_num, smile_num)
 
-        faces = self.face_cascade.detectMultiScale(
-            gray,
-            scaleFactor=self.face_opts['scaleFactor'],
-            minNeighbors=self.face_opts['minNeighbors'])
+        faces = self._get_faces(gray)
 
         for (f_x, f_y, f_w, f_h) in faces:
             face_num += 1
@@ -56,11 +56,7 @@ class Detector(object):
             roi_gray = gray[f_y:f_y + f_h, f_x:f_x + f_w]
             roi_color = frame[f_y:f_y + f_h, f_x:f_x + f_w]
 
-            smiles = self.smile_cascade.detectMultiScale(
-                roi_gray,
-                scaleFactor=self.smile_opts['scaleFactor'],
-                minNeighbors=self.smile_opts['minNeighbors'],
-                minSize=(f_w / 4, f_h / 8))
+            smiles = self._get_smiles(roi_gray, f_w, f_h)
 
             for (s_x, s_y, s_w, s_h) in smiles:
                 smile_num += 1
@@ -78,6 +74,34 @@ class Detector(object):
             cnt = cv2.imencode('.' + output_fmt, frame)[1]
             frame = base64.encodestring(cnt).decode('ascii')
         return frame
+
+    def _get_faces(self, frame_gray):
+        self._check_cache()
+        if self.cache['faces'] is None:
+            faces = self.face_cascade.detectMultiScale(
+                frame_gray,
+                scaleFactor=self.face_opts['scaleFactor'],
+                minNeighbors=self.face_opts['minNeighbors'])
+            self.cache['faces'] = faces
+        return self.cache['faces']
+
+    def _get_smiles(self, face_gray, face_width, face_height):
+        if self.cache['smiles'] is None:
+            smiles = self.smile_cascade.detectMultiScale(
+                face_gray,
+                scaleFactor=self.smile_opts['scaleFactor'],
+                minNeighbors=self.smile_opts['minNeighbors'],
+                minSize=(face_width / 4, face_height / 8))
+            self.cache['smiles'] = smiles
+        return self.cache['smiles']
+
+    def _check_cache(self):
+        if self.cache['hit_count'] > self.cache_ttl:
+            self.cache['faces'] = None
+            self.cache['smiles'] = None
+            self.cache['hit_count'] = 0
+        else:
+            self.cache['hit_count'] += 1
 
 
 if __name__ == "__main__":
