@@ -39,10 +39,10 @@ module.exports = NodeHelper.create({
                         console.log('stdout: ', data.toString());
                     });
                     detectorClient.stderr.on('data', (data) => {
-                        console.log('stderr: ', data.toString());
+                        console.error('stderr: ', data.toString());
                     });
                     detectorClient.on('error', (err) => {
-                        console.log('Failed to start subprocess.', err.toString());
+                        console.error('Failed to start subprocess.', err.toString());
                     });
                     detectorClient.on('close', (code) => {
                         console.log('subprocess exited with code ', code.toString());

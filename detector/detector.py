@@ -1,7 +1,8 @@
+from __future__ import print_function
 from os import path
-import base64
-import time
 import cv2
+import time
+import base64
 from imutils.video import WebcamVideoStream
 import imutils
 
