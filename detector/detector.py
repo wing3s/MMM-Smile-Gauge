@@ -1,5 +1,6 @@
 from os import path
 import base64
+import time
 import cv2
 from imutils.video import WebcamVideoStream
 import imutils
@@ -106,6 +107,8 @@ class Detector(object):
 
 if __name__ == "__main__":
     detector = Detector()
+    t1 = time.time()
+    count = 0
     while True:
         frame, face_num, smile_num = detector.process_frame('raw')
         print(face_num, smile_num)
@@ -113,4 +116,10 @@ if __name__ == "__main__":
         c = cv2.waitKey(100)  # wait 100ms
         if c == 27:  # Esc key to stop
             break
+        t2 = time.time()
+        count += 1
+        if (t2 - t1) > 5.0:
+            print("FPS is %d" % (int(count/5)))
+            count = 0
+            t1 = time.time()
     cv2.destroyAllWindows()
