@@ -29,7 +29,7 @@ if __name__ == "__main__":
         t2 = time.time()
         frame_count += 1
         if (t2 - t1) > 10.0:
-            print("FPS is %d" % (int(frame_count/10)))
+            print("FPS is %d\n" % (int(frame_count/10)))
             frame_count = 0
             t1 = time.time()
 
