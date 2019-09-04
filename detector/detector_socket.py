@@ -27,7 +27,7 @@ if __name__ == "__main__":
         sleep(FRAME_WAIT / 1000)
 
         t2 = time.time()
-        count += 1
+        frame_count += 1
         if (t2 - t1) > 10.0:
             print("FPS is %d" % (int(frame_count/10)))
             frame_count = 0
