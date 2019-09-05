@@ -59,6 +59,8 @@ python detector.py
 ### Replace gauge images
   Simply change square images in `MMM-Smile-Gauge/public` folder.
 
+## Performance
+[Enabling Open GL driver for Raspberry Pi](https://github.com/MichMich/MagicMirror/wiki/Configuring-the-Raspberry-Pi) is required. Both face detection and Electron for Magic Mirror are CPU heavy.
 
 ## Reference
 - [Real-time smile detection](http://pushbuttons.io/blog/2015/4/27/smile-detection-in-python-opencv)
